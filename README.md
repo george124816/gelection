@@ -1,1 +1,1 @@
-<img src="./diagram.svg" alt="Workflow" width="600">
+![Workflow](workflow.svg)
