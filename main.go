@@ -7,12 +7,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/jackc/pgx/v5"
 	kafka "github.com/segmentio/kafka-go"
 )
 
 func main() {
 	// postgres example
+	Connect()
 	helloWorldDatabase()
 
 	// kafka example
@@ -21,15 +21,8 @@ func main() {
 }
 
 func helloWorldDatabase() {
-	conn, err := pgx.Connect(context.Background(), "postgres://postgres:postgres@localhost:5555/postgres")
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database %v\n", err)
-		os.Exit(1)
-	}
-	defer conn.Close(context.Background())
-
 	var greeting string
-	err = conn.QueryRow(context.Background(), "select 'Hello, World'").Scan(&greeting)
+	err := Db.QueryRow(context.Background(), "select 'Hello, World'").Scan(&greeting)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
 		os.Exit(1)
