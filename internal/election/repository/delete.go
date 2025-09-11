@@ -6,7 +6,11 @@ import (
 )
 
 func Delete(id int) error {
-	_, err := db.Db.Exec(context.Background(), "DELETE FROM election WHERE id = $1", id)
+	sqlStatement := `
+DELETE FROM election WHERE id = $1
+`
+
+	_, err := db.Engine.Exec(context.Background(), sqlStatement, id)
 	if err != nil {
 		return err
 	}
