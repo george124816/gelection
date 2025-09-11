@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/george124816/gelection/internal/app/models/election"
 	"github.com/george124816/gelection/internal/db"
 	kafka "github.com/segmentio/kafka-go"
 )
@@ -23,8 +24,13 @@ func main() {
 }
 
 func helloWorldDatabase() {
+	err := election.Create("Humble election")
+	if err != nil {
+		log.Fatalln("Failed to create a election:", err)
+	}
+
 	var name string
-	err := db.Db.QueryRow(context.Background(), "SELECT name FROM election LIMIT 1").Scan(&name)
+	err = db.Db.QueryRow(context.Background(), "SELECT name FROM election LIMIT 1").Scan(&name)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
 		os.Exit(1)
