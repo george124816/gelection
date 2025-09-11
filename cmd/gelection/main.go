@@ -7,7 +7,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/george124816/gelection/internal/app/models/election"
 	"github.com/george124816/gelection/internal/db"
 	kafka "github.com/segmentio/kafka-go"
 )
