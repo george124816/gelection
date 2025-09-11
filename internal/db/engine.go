@@ -1,4 +1,4 @@
-package main
+package db
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-var Db *pgxpool.Pool
+var Engine *pgxpool.Pool
 
 func Connect() {
 	poolConfig, err := pgxpool.ParseConfig("postgres://postgres:postgres@localhost:5555/postgres")
@@ -14,7 +14,7 @@ func Connect() {
 		log.Fatalln("Unable to parse DATABASE_URL:", err)
 	}
 
-	Db, err = pgxpool.NewWithConfig(context.Background(), poolConfig)
+	Engine, err = pgxpool.NewWithConfig(context.Background(), poolConfig)
 	if err != nil {
 		log.Fatalln("Unable to create connection pool", err)
 	}

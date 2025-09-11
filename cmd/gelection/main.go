@@ -7,28 +7,18 @@ import (
 	"os"
 	"time"
 
+	"github.com/george124816/gelection/internal/db"
 	kafka "github.com/segmentio/kafka-go"
 )
 
 func main() {
-	// postgres example
-	Connect()
-	helloWorldDatabase()
+	// postgres initialize
+	db.Connect()
+	db.Schema()
 
 	// kafka example
 	publishMessage()
 	consumeMessage()
-}
-
-func helloWorldDatabase() {
-	var greeting string
-	err := Db.QueryRow(context.Background(), "select 'Hello, World'").Scan(&greeting)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Println(greeting)
 }
 
 func publishMessage() {
