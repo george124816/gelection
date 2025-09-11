@@ -24,13 +24,17 @@ func main() {
 }
 
 func helloWorldDatabase() {
-	err := election.Create("Humble election")
+	var err error
+
+	_ = election.Delete(3)
+
+	err = election.Create("Humble election")
 	if err != nil {
 		log.Fatalln("Failed to create a election:", err)
 	}
 
 	var name string
-	name, err := election.Read(1)
+	name, err = election.Read(4)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
 		os.Exit(1)
