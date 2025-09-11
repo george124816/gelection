@@ -7,22 +7,26 @@ import (
 	"os"
 	"time"
 
+	api "github.com/george124816/gelection/cmd/server/http"
+	"github.com/george124816/gelection/internal/db"
 	kafka "github.com/segmentio/kafka-go"
 )
 
 func main() {
 	// postgres example
-	Connect()
+	db.Connect()
 	helloWorldDatabase()
 
 	// kafka example
 	publishMessage()
-	consumeMessage()
+	// consumeMessage()
+
+	api.Start()
 }
 
 func helloWorldDatabase() {
 	var greeting string
-	err := Db.QueryRow(context.Background(), "select 'Hello, World'").Scan(&greeting)
+	err := db.Db.QueryRow(context.Background(), "select 'Hello, World'").Scan(&greeting)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
 		os.Exit(1)
