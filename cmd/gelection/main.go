@@ -30,7 +30,7 @@ func helloWorldDatabase() {
 	}
 
 	var name string
-	err = db.Db.QueryRow(context.Background(), "SELECT name FROM election LIMIT 1").Scan(&name)
+	name, err := election.Read(1)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
 		os.Exit(1)
