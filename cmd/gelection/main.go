@@ -13,34 +13,13 @@ import (
 )
 
 func main() {
-	// postgres example
+	// postgres initialize
 	db.Connect()
 	db.Schema()
-	helloWorldDatabase()
 
 	// kafka example
 	publishMessage()
 	consumeMessage()
-}
-
-func helloWorldDatabase() {
-	var err error
-
-	_ = election.Delete(3)
-
-	err = election.Create("Humble election")
-	if err != nil {
-		log.Fatalln("Failed to create a election:", err)
-	}
-
-	var name string
-	name, err = election.Read(4)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Println(name)
 }
 
 func publishMessage() {
