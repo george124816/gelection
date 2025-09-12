@@ -14,7 +14,7 @@ import (
 
 func main() {
 	// postgres example
-	db.Connect()
+	engine.Connect()
 	helloWorldDatabase()
 
 	// kafka example
@@ -26,7 +26,7 @@ func main() {
 
 func helloWorldDatabase() {
 	var greeting string
-	err := db.Db.QueryRow(context.Background(), "select 'Hello, World'").Scan(&greeting)
+	err := engine.Db.QueryRow(context.Background(), "select 'Hello, World'").Scan(&greeting)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
 		os.Exit(1)

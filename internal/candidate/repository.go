@@ -13,7 +13,7 @@ func CreateCandidate(candidate Candidate) error {
 	INSERT INTO candidates (name, election_id) VALUES ($1, $2)
 	`
 
-	_, err := db.Db.Exec(context.Background(), sqlStatement, candidate.Name, candidate.ElectionId)
+	_, err := engine.Db.Exec(context.Background(), sqlStatement, candidate.Name, candidate.ElectionId)
 
 	if err != nil {
 		log.Println(err)
@@ -28,7 +28,7 @@ func GetCandidate(id uint64) (Candidate, error) {
 	var candidate Candidate
 	sqlStatement := `SELECT * FROM candidates WHERE id = $1`
 
-	err := db.Db.QueryRow(context.Background(), sqlStatement, id).Scan(&candidate.Id, &candidate.Name, &candidate.ElectionId)
+	err := engine.Db.QueryRow(context.Background(), sqlStatement, id).Scan(&candidate.Id, &candidate.Name, &candidate.ElectionId)
 
 	if err != nil {
 		log.Println(err)
