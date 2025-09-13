@@ -4,14 +4,14 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/george124816/gelection/internal/candidate"
+	"github.com/george124816/gelection/internal/candidate/handler"
 )
 
 func Start() {
 	router := http.NewServeMux()
 
-	router.HandleFunc("/candidate", candidate.CandidateHandler)
-	router.HandleFunc("/candidate/{id}", candidate.CandidateHandler)
+	router.HandleFunc("/candidate", handler.CandidateHandler)
+	router.HandleFunc("/candidate/{id}", handler.CandidateHandler)
 
 	log.Println("serving...")
 

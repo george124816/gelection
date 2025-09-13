@@ -1,4 +1,4 @@
-package candidate
+package model
 
 type Candidate struct {
 	Id         int64  `json:"id"`
