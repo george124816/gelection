@@ -9,6 +9,7 @@ import (
 
 	// "github.com/george124816/gelection/internal/db"
 	"github.com/george124816/gelection/cmd/http"
+	"github.com/george124816/gelection/cmd/migrate"
 	kafka "github.com/segmentio/kafka-go"
 )
 
@@ -16,13 +17,14 @@ func main() {
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
 		case "http":
-			fmt.Println("VAMOS STARTAR O HTTP")
 			http.Start()
-
+		case "migrate":
+			migrate.Migrate()
 		}
 	} else {
 		fmt.Println(`should be pass one of follow parameters:
-- http`)
+- http
+- migrate`)
 	}
 }
 
