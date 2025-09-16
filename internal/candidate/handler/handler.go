@@ -12,7 +12,6 @@ import (
 	"github.com/george124816/gelection/internal/candidate/model"
 	"github.com/george124816/gelection/internal/candidate/repository"
 	engine "github.com/george124816/gelection/internal/db"
-	// "github.com/jackc/pgx/v5/pgxpool"
 )
 
 func CandidateHandler(w http.ResponseWriter, r *http.Request) {
