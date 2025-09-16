@@ -4,22 +4,26 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
-	api "github.com/george124816/gelection/cmd/server/http"
-	"github.com/george124816/gelection/internal/db"
+	// "github.com/george124816/gelection/internal/db"
+	"github.com/george124816/gelection/cmd/http"
 	kafka "github.com/segmentio/kafka-go"
 )
 
 func main() {
-	// postgres example
-	engine.Connect()
+	if len(os.Args) > 1 {
+		switch os.Args[1] {
+		case "http":
+			fmt.Println("VAMOS STARTAR O HTTP")
+			http.Start()
 
-	// kafka example
-	publishMessage()
-	// consumeMessage()
-
-	api.Start()
+		}
+	} else {
+		fmt.Println(`should be pass one of follow parameters:
+- http`)
+	}
 }
 
 func publishMessage() {
