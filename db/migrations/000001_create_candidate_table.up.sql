@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS candidates(
+	id BIGSERIAL PRIMARY KEY,
+	name TEXT UNIQUE NOT NULL,
+	election_id BIGINT
+);

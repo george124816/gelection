@@ -10,7 +10,7 @@ func Delete(id int) error {
 DELETE FROM election WHERE id = $1
 `
 
-	_, err := db.Engine.Exec(context.Background(), sqlStatement, id)
+	_, err := engine.Engine.Exec(context.Background(), sqlStatement, id)
 	if err != nil {
 		return err
 	}
