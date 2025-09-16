@@ -14,7 +14,7 @@ func Create(candidate model.Candidate) error {
 	INSERT INTO candidates (name, election_id) VALUES ($1, $2)
 	`
 
-	_, err := engine.Db.Exec(context.Background(), sqlStatement, candidate.Name, candidate.ElectionId)
+	_, err := engine.Engine.Exec(context.Background(), sqlStatement, candidate.Name, candidate.ElectionId)
 
 	if err != nil {
 		log.Println(err)

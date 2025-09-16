@@ -23,7 +23,7 @@ func CandidateHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintln(w, err)
 		}
 
-		candidate, err := repository.GetCandidate(context.Background(), engine.Db, uint64(inputId))
+		candidate, err := repository.GetCandidate(context.Background(), engine.Engine, uint64(inputId))
 		result, err := json.Marshal(candidate)
 		if err != nil {
 			fmt.Fprintln(w, err)

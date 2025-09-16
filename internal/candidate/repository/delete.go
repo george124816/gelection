@@ -10,7 +10,7 @@ import (
 func DeleteCandidate(id uint64) error {
 	sqlStatement := `DELETE FROM candidates WHERE id = $1`
 
-	result, err := engine.Db.Exec(context.Background(), sqlStatement, id)
+	result, err := engine.Engine.Exec(context.Background(), sqlStatement, id)
 
 	if err != nil {
 		return err

@@ -11,7 +11,7 @@ import (
 func Update(id int, candidate model.Candidate) error {
 	sqlStatement := `UPDATE candidates SET name = $1 WHERE id = $2`
 
-	result, err := engine.Db.Exec(context.Background(), sqlStatement, candidate.Name, id)
+	result, err := engine.Engine.Exec(context.Background(), sqlStatement, candidate.Name, id)
 
 	if err != nil {
 		return err

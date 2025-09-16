@@ -37,7 +37,7 @@ func GetAll() ([]model.Candidate, error) {
 
 	sqlStatement := `SELECT * FROM candidates`
 
-	result, err := engine.Db.Query(context.Background(), sqlStatement)
+	result, err := engine.Engine.Query(context.Background(), sqlStatement)
 
 	if err != nil {
 		return nil, err
