@@ -7,14 +7,18 @@ import (
 
 	"github.com/george124816/gelection/internal/candidate/model"
 	engine "github.com/george124816/gelection/internal/db"
+	"github.com/jackc/pgx/v5"
 )
 
-func GetCandidate(id uint64) (model.Candidate, error) {
+type DBQueries interface {
+	QueryRow(ctx context.Context, sql string, args ...any) pgx.Row
+}
 
+func GetCandidate(ctx context.Context, db DBQueries, id uint64) (model.Candidate, error) {
 	var candidate model.Candidate
 	sqlStatement := `SELECT * FROM candidates WHERE id = $1`
 
-	err := engine.Db.QueryRow(context.Background(), sqlStatement, id).Scan(&candidate.Id, &candidate.Name, &candidate.ElectionId)
+	err := db.QueryRow(ctx, sqlStatement, id).Scan(&candidate.Id, &candidate.Name, &candidate.ElectionId)
 
 	if err != nil {
 		log.Println(err)
@@ -49,16 +53,4 @@ func GetAll() ([]model.Candidate, error) {
 	}
 
 	return candidates, nil
-}
-
-func DeleteCandidate(id uint64) error {
-	sqlStatement := `DELETE FROM candidates WHERE id = $1`
-
-	_, err := engine.Db.Exec(context.Background(), sqlStatement, id)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

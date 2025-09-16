@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	api "github.com/george124816/gelection/cmd/server/http"
@@ -15,24 +14,12 @@ import (
 func main() {
 	// postgres example
 	engine.Connect()
-	helloWorldDatabase()
 
 	// kafka example
 	publishMessage()
 	// consumeMessage()
 
 	api.Start()
-}
-
-func helloWorldDatabase() {
-	var greeting string
-	err := engine.Db.QueryRow(context.Background(), "select 'Hello, World'").Scan(&greeting)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Println(greeting)
 }
 
 func publishMessage() {
@@ -62,7 +49,6 @@ func publishMessage() {
 
 	}
 
-	fmt.Println("oi")
 }
 
 func consumeMessage() {
