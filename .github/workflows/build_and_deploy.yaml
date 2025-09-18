@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - chore/create-workflow-pipeline
+      - main
 
 jobs:
   build:
