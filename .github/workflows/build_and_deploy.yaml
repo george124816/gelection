@@ -13,6 +13,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: TestHelloWorld
-        run: mkdir "crazy_things_happim"
-        
+      - name: Build docker image
+        run: docker build -t gelection .
+
+      - name: Stop container
+        run: docker stop gelection
+
+      - name: Remove previous version
+        run: docker rm gelection
+
+      - name: Run the server
+        run: docker run -p 5000:4000 -d --name gelection gelection
