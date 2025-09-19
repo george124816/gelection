@@ -31,5 +31,4 @@ func GetEnvOrDefault(envName string, defaultValue string) string {
 	} else {
 		return defaultValue
 	}
-
 }
