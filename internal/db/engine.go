@@ -2,14 +2,18 @@ package engine
 
 import (
 	"context"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
+	"os"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 var Engine *pgxpool.Pool
 
 func Connect() {
-	poolConfig, err := pgxpool.ParseConfig("postgres://postgres:postgres@localhost:5555/postgres")
+	postgresUrl := GetEnvOrDefault("POSTGRES_URL", "postgres://postgres:postgres@localhost:5555/postgres")
+	poolConfig, err := pgxpool.ParseConfig(postgresUrl)
+
 	if err != nil {
 		log.Fatalln("Unable to parse DATABASE_URL:", err)
 	}
@@ -18,4 +22,14 @@ func Connect() {
 	if err != nil {
 		log.Fatalln("Unable to create connection pool", err)
 	}
+}
+func GetEnvOrDefault(envName string, defaultValue string) string {
+	resultValue := os.Getenv(envName)
+	if resultValue != "" {
+		return resultValue
+
+	} else {
+		return defaultValue
+	}
+
 }
