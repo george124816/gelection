@@ -6,12 +6,12 @@ import (
 	"log"
 
 	"github.com/george124816/gelection/internal/candidate/model"
-	engine "github.com/george124816/gelection/internal/db"
 	"github.com/jackc/pgx/v5"
 )
 
 type DBQueries interface {
 	QueryRow(ctx context.Context, sql string, args ...any) pgx.Row
+	Query(ctx context.Context, sql string, args ...any) (pgx.Rows, error)
 }
 
 func GetCandidate(ctx context.Context, db DBQueries, id uint64) (model.Candidate, error) {
@@ -31,13 +31,13 @@ func GetCandidate(ctx context.Context, db DBQueries, id uint64) (model.Candidate
 
 }
 
-func GetAll() ([]model.Candidate, error) {
+func GetAll(ctx context.Context, db DBQueries) ([]model.Candidate, error) {
 
 	var candidates []model.Candidate
 
 	sqlStatement := `SELECT * FROM candidates`
 
-	result, err := engine.Engine.Query(context.Background(), sqlStatement)
+	result, err := db.Query(ctx, sqlStatement)
 
 	if err != nil {
 		return nil, err
@@ -45,7 +45,6 @@ func GetAll() ([]model.Candidate, error) {
 
 	for result.Next() {
 		var c model.Candidate
-		// scan into fields
 		if err := result.Scan(&c.Id, &c.Name, &c.ElectionId); err != nil {
 			log.Fatal(err)
 		}
