@@ -27,7 +27,6 @@ func GetEnvOrDefault(envName string, defaultValue string) string {
 	resultValue := os.Getenv(envName)
 	if resultValue != "" {
 		return resultValue
-
 	} else {
 		return defaultValue
 	}
