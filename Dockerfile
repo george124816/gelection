@@ -11,5 +11,4 @@ RUN go build -o /bin/gelection .
 FROM debian:bookworm-20250908
 
 COPY --from=builder /bin/gelection /bin/gelection
-ENTRYPOINT ["/bin/gelection"]
-CMD ["http"]
+CMD ["/bin/gelection"]
