@@ -14,8 +14,7 @@ import (
 
 func Migrate() error {
 	postgresUrl := engine.GetEnvOrDefault(
-		"POSTGRES_URL", "postgres://postgres:postgres@localhost:5555/postgres?sslmode=disable",
-	)
+		"POSTGRES_URL", "postgres://postgres:postgres@localhost:5555/postgres?sslmode=disable")
 	db, err := sql.Open("postgres", postgresUrl)
 	if err != nil {
 		log.Fatal(err)
@@ -25,7 +24,7 @@ func Migrate() error {
 		log.Fatal(err)
 	}
 	m, err := migrate.NewWithDatabaseInstance(
-		engine.GetEnvOrDefault("MIGRATION_PATH", "file:///bin/db/migrations"),
+		"file://db/migrations",
 		"postgres", driver)
 	if err != nil {
 		log.Fatal(err)
