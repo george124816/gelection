@@ -4,9 +4,10 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/george124816/gelection/internal/candidate/handler"
+	candidateHandler "github.com/george124816/gelection/internal/candidate/handler"
 	"github.com/george124816/gelection/internal/configs"
 	engine "github.com/george124816/gelection/internal/db"
+	electionHandler "github.com/george124816/gelection/internal/election/handler"
 )
 
 func Start() {
@@ -16,9 +17,15 @@ func Start() {
 
 	router := http.NewServeMux()
 
-	router.HandleFunc("/candidate", handler.CandidateHandler)
-	router.HandleFunc("/candidates", handler.CandidateHandler)
-	router.HandleFunc("/candidate/{id}", handler.CandidateHandler)
+	// Election Routes
+	router.HandleFunc("/elections", electionHandler.ElectionHandler)
+	router.HandleFunc("/election/{id}", electionHandler.ElectionHandler)
+	router.HandleFunc("/election", electionHandler.ElectionHandler)
+
+	// Candidate Routes
+	router.HandleFunc("/candidate", candidateHandler.CandidateHandler)
+	router.HandleFunc("/candidates", candidateHandler.CandidateHandler)
+	router.HandleFunc("/candidate/{id}", candidateHandler.CandidateHandler)
 
 	log.Println("starting server on port", config.Port)
 

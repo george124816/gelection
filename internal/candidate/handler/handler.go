@@ -29,7 +29,7 @@ func CandidateHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Fprintln(w, string(result))
 	case r.Method == "GET" && r.Pattern == "/candidates":
-		candidates, err := repository.GetAll()
+		candidates, err := repository.GetAll(context.Background(), engine.Engine)
 
 		if err != nil {
 			fmt.Fprintln(w, err)

@@ -1,4 +1,4 @@
-package election
+package model
 
 type Election struct {
 	Id   int64  `json:"id"`
