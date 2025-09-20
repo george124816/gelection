@@ -25,7 +25,7 @@ func Migrate() error {
 		log.Fatal(err)
 	}
 	m, err := migrate.NewWithDatabaseInstance(
-		"file:///bin/db/migrations",
+		engine.GetEnvOrDefault("MIGRATION_PATH", "file:///bin/db/migrations"),
 		"postgres", driver)
 	if err != nil {
 		log.Fatal(err)
