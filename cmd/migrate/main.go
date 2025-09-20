@@ -10,7 +10,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func Migrate() {
+func Migrate() error {
 	db, err := sql.Open("postgres", "postgres://postgres:postgres@localhost:5555/postgres?sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
@@ -25,5 +25,10 @@ func Migrate() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	m.Up()
+	err := m.Up()
+	if err != migrate.ErrNoChange {
+		return err
+	}
+
+	return nil
 }
