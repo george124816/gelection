@@ -25,7 +25,7 @@ func Migrate() error {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err := m.Up()
+	err = m.Up()
 	if err != migrate.ErrNoChange {
 		return err
 	}
