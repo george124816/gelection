@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	// "github.com/george124816/gelection/internal/db"
@@ -14,18 +13,12 @@ import (
 )
 
 func main() {
-	if len(os.Args) > 1 {
-		switch os.Args[1] {
-		case "http":
-			http.Start()
-		case "migrate":
-			migrate.Migrate()
-		}
-	} else {
-		fmt.Println(`should be pass one of follow parameters:
-- http
-- migrate`)
+	err := migrate.Migrate()
+	if err != nil {
+		log.Fatalln("Failed to migrate: ", err)
 	}
+
+	http.Start()
 }
 
 func publishMessage() {
