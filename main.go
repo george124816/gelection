@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	// "github.com/george124816/gelection/internal/db"
@@ -13,6 +14,9 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
+	log.SetOutput(os.Stderr)
+
 	err := migrate.Migrate()
 	if err != nil {
 		log.Fatalln("Failed to migrate: ", err)
