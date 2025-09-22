@@ -29,6 +29,9 @@ func Migrate() error {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	log.Println("running migrate")
+
 	err = m.Up()
 	if err != migrate.ErrNoChange {
 		return err
