@@ -9,12 +9,13 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 
-	engine "github.com/george124816/gelection/internal/db"
+	"github.com/george124816/gelection/internal/configs"
 )
 
 func Migrate() error {
-	postgresUrl := engine.GetEnvOrDefault(
-		"POSTGRES_URL", "postgres://postgres:postgres@localhost:5555/postgres?sslmode=disable")
+	databaseConfig := configs.GetPostgresConfig()
+	postgresUrl := databaseConfig.String()
+
 	db, err := sql.Open("postgres", postgresUrl)
 	if err != nil {
 		log.Fatal(err)
