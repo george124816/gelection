@@ -1,0 +1,11 @@
+name: Validate Example
+
+on:
+  pull_request:
+
+    jobs:
+      lint:
+        steps:
+          run: |
+            ls
+            pwd
