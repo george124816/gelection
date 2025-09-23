@@ -82,6 +82,9 @@ func CandidateListCreateHandler(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			log.Println("failed to decode json")
+			w.WriteHeader(http.StatusBadGateway)
+			fmt.Fprintln(w, err)
+			return
 		}
 
 		err = repository.Create(requestCandidate)
