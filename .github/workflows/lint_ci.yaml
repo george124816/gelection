@@ -4,7 +4,7 @@ on:
   pull_request:
 
 jobs:
-  gofmt:
+  lintci:
     runs-on: self-hosted
     steps:
       - name: Checkout code
