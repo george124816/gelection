@@ -12,7 +12,7 @@ import (
 var Engine *pgxpool.Pool
 
 func Connect() {
-	postgresUrl := configs.GetPostgressConfig().String()
+	postgresUrl := configs.GetPostgresConfig().String()
 	poolConfig, err := pgxpool.ParseConfig(postgresUrl)
 
 	if err != nil {

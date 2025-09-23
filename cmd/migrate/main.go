@@ -13,7 +13,7 @@ import (
 )
 
 func Migrate() error {
-	databaseConfig := configs.GetPostgressConfig()
+	databaseConfig := configs.GetPostgresConfig()
 	postgresUrl := databaseConfig.String()
 
 	db, err := sql.Open("postgres", postgresUrl)

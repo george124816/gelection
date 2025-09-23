@@ -34,7 +34,7 @@ func (c DatabaseConfig) String() string {
 	return u.String()
 }
 
-func GetPostgressConfig() DatabaseConfig {
+func GetPostgresConfig() DatabaseConfig {
 	user := GetEnvOrDefault("DATABASE_USER", "postgres")
 	password := url.QueryEscape(GetEnvOrDefault("DATABASE_PASSWORD", "postgres"))
 	host := GetEnvOrDefault("DATABASE_HOST", "localhost")
@@ -57,7 +57,7 @@ func GetEnvOrDefault(envName string, defaultValue string) string {
 	resultValue := os.Getenv(envName)
 	if resultValue != "" {
 		return resultValue
-	} else {
-		return defaultValue
 	}
+	return defaultValue
+
 }
