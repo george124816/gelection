@@ -14,9 +14,9 @@ import (
 	engine "github.com/george124816/gelection/internal/db"
 )
 
-func CandidateHandler(w http.ResponseWriter, r *http.Request) {
+func CandidateRetrieveUpdateDestroyHandler(w http.ResponseWriter, r *http.Request) {
 	switch {
-	case r.Method == "GET" && r.Pattern == "/candidate/{id}":
+	case r.Method == "GET":
 		inputId, err := strconv.Atoi(r.PathValue("id"))
 		if err != nil {
 			fmt.Fprintln(w, err)
@@ -28,21 +28,7 @@ func CandidateHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintln(w, err)
 		}
 		fmt.Fprintln(w, string(result))
-	case r.Method == "GET" && r.Pattern == "/candidates":
-		candidates, err := repository.GetAll()
-
-		if err != nil {
-			fmt.Fprintln(w, err)
-		}
-
-		resultJson, err := json.Marshal(candidates)
-		if err != nil {
-			fmt.Fprintln(w, err)
-		}
-
-		fmt.Fprintln(w, string(resultJson))
-
-	case r.Method == "UPDATE" && r.Pattern == "/candidate/{id}":
+	case r.Method == "UPDATE":
 		var requestCandidate model.Candidate
 		inputId, err := strconv.Atoi(r.PathValue("id"))
 		if err != nil {
@@ -62,8 +48,29 @@ func CandidateHandler(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(http.StatusGone)
 		fmt.Fprintln(w, "UPDATED")
+	case r.Method == "DELETE":
+		inputId, err := strconv.Atoi(r.PathValue("id"))
+		if err != nil {
+			fmt.Fprintln(w, err)
+		}
+		err = repository.DeleteCandidate(uint64(inputId))
 
-	case r.Method == "POST" && r.Pattern == "/candidate":
+		if err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprintln(w, err)
+			return
+		}
+
+		w.WriteHeader(http.StatusNoContent)
+		fmt.Fprintln(w, "deleted")
+	default:
+		fmt.Println("not found")
+	}
+}
+
+func CandidateListCreateHandler(w http.ResponseWriter, r *http.Request) {
+	switch {
+	case r.Method == "POST":
 		var requestCandidate model.Candidate
 		bodyRequest, err := io.ReadAll(r.Body)
 
@@ -86,21 +93,19 @@ func CandidateHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		w.WriteHeader(http.StatusCreated)
 		fmt.Fprintln(w, "created")
-	case r.Method == "DELETE" && r.Pattern == "/candidate/{id}":
-		inputId, err := strconv.Atoi(r.PathValue("id"))
+	case r.Method == "GET":
+		candidates, err := repository.GetAll()
+
 		if err != nil {
 			fmt.Fprintln(w, err)
 		}
-		err = repository.DeleteCandidate(uint64(inputId))
 
+		resultJson, err := json.Marshal(candidates)
 		if err != nil {
-			w.WriteHeader(http.StatusNotFound)
 			fmt.Fprintln(w, err)
-			return
 		}
 
-		w.WriteHeader(http.StatusNoContent)
-		fmt.Fprintln(w, "deleted")
+		fmt.Fprintln(w, string(resultJson))
 	default:
 		fmt.Println("not found")
 	}
