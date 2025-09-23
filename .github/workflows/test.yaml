@@ -1,4 +1,4 @@
-name: Go Format
+name: Go Test
 
 on:
   pull_request:
@@ -17,10 +17,4 @@ jobs:
 
       - name: Run gofmt
         run: |
-          FILES=$(gofmt -l .)
-          if [ -n "$FILES" ]; then
-            echo "The following files are not formatted:"
-            echo "$FILES"
-            echo "Run 'go fmt ./...' locally to fix."
-            exit 1
-          fi
+          go test
