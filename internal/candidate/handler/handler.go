@@ -76,6 +76,9 @@ func CandidateListCreateHandler(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			log.Println("body request failed")
+			w.WriteHeader(http.StatusBadGateway)
+			fmt.Fprintln(w, err)
+			return
 		}
 
 		err = json.Unmarshal(bodyRequest, &requestCandidate)
@@ -90,6 +93,7 @@ func CandidateListCreateHandler(w http.ResponseWriter, r *http.Request) {
 		err = repository.Create(requestCandidate)
 
 		if err != nil {
+			log.Println("failed to create candidate")
 			w.WriteHeader(http.StatusConflict)
 			fmt.Fprintln(w, err)
 			return
