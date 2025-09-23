@@ -16,9 +16,8 @@ func Start() {
 
 	router := http.NewServeMux()
 
-	router.HandleFunc("/candidate", handler.CandidateHandler)
-	router.HandleFunc("/candidates", handler.CandidateHandler)
-	router.HandleFunc("/candidate/{id}", handler.CandidateHandler)
+	router.HandleFunc("/candidates", handler.CandidateListCreateHandler)
+	router.HandleFunc("/candidates/{id}", handler.CandidateRetrieveUpdateDestroyHandler)
 
 	log.Println("starting server on port", config.Port)
 
