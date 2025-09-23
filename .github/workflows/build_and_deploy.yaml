@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: self-hosted
+    env:
+      POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
