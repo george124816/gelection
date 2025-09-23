@@ -10,7 +10,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-    container: node:20
-    steps:
-      - uses: actions/checkout@v4
-      - uses: raven-actions/actionlint@v2
+      - name: actionlint
+        uses: raven-actions/actionlint@v2
