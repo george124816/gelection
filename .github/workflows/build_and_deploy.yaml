@@ -24,18 +24,18 @@ jobs:
         run: docker build -t gelection .
 
       - name: Stop container
-        run: docker stop gelection
+        run: docker stop gelection || true
 
       - name: Remove previous version
-        run: docker rm gelection
+        run: docker rm gelection || true
 
       - name: Run the server
         run: |
           docker run -p 5000:4000 -d \
-            --env DATABASE_USER \
-            --env DATABASE_PASSWORD \
-            --env DATABASE_HOST \
-            --env DATABASE_PORT \
-            --env DATABASE_NAME \
-            --env DATABASE_SSL_MODE \
+            --env DATABASE_USER="${DATABASE_USER}" \
+            --env DATABASE_PASSWORD="${DATABASE_PASSWORD}" \
+            --env DATABASE_HOST="${DATABASE_HOST}" \
+            --env DATABASE_PORT="${DATABASE_PORT}" \
+            --env DATABASE_NAME="${DATABASE_NAME}" \
+            --env DATABASE_SSL_MODE="${DATABASE_SSL_MODE}" \
             --name gelection --restart unless-stopped gelection
