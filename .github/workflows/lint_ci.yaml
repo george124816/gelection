@@ -1,0 +1,14 @@
+name: Validate CI
+
+on:
+  pull_request:
+
+jobs:
+  gofmt:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: actionlint
+        uses: raven-actions/actionlint@v2
