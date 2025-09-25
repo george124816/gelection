@@ -1,4 +1,4 @@
-package election
+package repository
 
 import (
 	"context"

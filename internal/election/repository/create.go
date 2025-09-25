@@ -1,19 +1,25 @@
-package election
+package repository
 
 import (
 	"context"
-	"github.com/george124816/gelection/internal/db"
+	"log"
+
+	"github.com/george124816/gelection/internal/election/model"
 )
 
-func Create(election Election) error {
+func Create(ctx context.Context, db DBQueries, election model.Election) error {
 	sqlStatement := `
-INSERT INTO election (name) VALUES ($1)
-`
+	INSERT INTO elections (name) VALUES ($1)
+	`
 
-	_, err := db.Engine.Exec(context.Background(), sqlStatement, election.name)
+	_, err := db.Exec(ctx, sqlStatement, election.Name)
+
 	if err != nil {
+		log.Println(err)
+
 		return err
 	}
 
 	return nil
+
 }

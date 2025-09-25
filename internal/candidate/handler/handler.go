@@ -30,6 +30,7 @@ func CandidateRetrieveUpdateDestroyHandler(w http.ResponseWriter, r *http.Reques
 			fmt.Fprintln(w, err)
 		}
 		fmt.Fprintln(w, string(result))
+
 	case r.Method == "UPDATE":
 		var requestCandidate model.Candidate
 		inputId, err := strconv.Atoi(r.PathValue("id"))
@@ -104,7 +105,7 @@ func CandidateListCreateHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusCreated)
 		fmt.Fprintln(w, "created")
 	case r.Method == "GET":
-		candidates, err := repository.GetAll()
+		candidates, err := repository.GetAll(context.Background(), engine.Engine)
 
 		if err != nil {
 			fmt.Fprintln(w, err)
