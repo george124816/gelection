@@ -17,9 +17,8 @@ func Start() {
 
 	router := http.NewServeMux()
 
-	router.HandleFunc("/elections", electionHandler.ElectionHandler)
-	router.HandleFunc("/election/{id}", electionHandler.ElectionHandler)
-	router.HandleFunc("/election", electionHandler.ElectionHandler)
+	router.HandleFunc("/elections", electionHandler.ElectionListCreateHandler)
+	router.HandleFunc("/elections/{id}", electionHandler.ElectionRetrieveHandler)
 
 	router.HandleFunc("/candidates", handler.CandidateListCreateHandler)
 	router.HandleFunc("/candidates/{id}", handler.CandidateRetrieveUpdateDestroyHandler)
