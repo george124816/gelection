@@ -4,17 +4,14 @@ import (
 	"context"
 	"log"
 
-	"github.com/george124816/gelection/internal/db"
 	"github.com/george124816/gelection/internal/election/model"
 )
 
 func GetElection(ctx context.Context, db DBQueries, id int) (model.Election, error) {
 	var election model.Election
-	sqlStatement := `
-SELECT name FROM election WHERE id = $1
-`
+	sqlStatement := `SELECT * FROM elections WHERE id = $1`
 
-	err := engine.Engine.QueryRow(ctx, sqlStatement, id).Scan(election.Name)
+	err := db.QueryRow(ctx, sqlStatement, id).Scan(&election.Id, &election.Name)
 	if err != nil {
 		return model.Election{}, err
 	}
