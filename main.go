@@ -14,18 +14,15 @@ import (
 )
 
 func main() {
-	if len(os.Args) > 1 {
-		switch os.Args[1] {
-		case "http":
-			http.Start()
-		case "migrate":
-			migrate.Migrate()
-		}
-	} else {
-		fmt.Println(`should be pass one of follow parameters:
-- http
-- migrate`)
+	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
+	log.SetOutput(os.Stderr)
+
+	err := migrate.Migrate()
+	if err != nil {
+		log.Fatalln("Failed to migrate: ", err)
 	}
+
+	http.Start()
 }
 
 func publishMessage() {

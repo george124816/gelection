@@ -17,15 +17,12 @@ func Start() {
 
 	router := http.NewServeMux()
 
-	// Election Routes
 	router.HandleFunc("/elections", electionHandler.ElectionHandler)
 	router.HandleFunc("/election/{id}", electionHandler.ElectionHandler)
 	router.HandleFunc("/election", electionHandler.ElectionHandler)
 
-	// Candidate Routes
-	router.HandleFunc("/candidate", candidateHandler.CandidateHandler)
-	router.HandleFunc("/candidates", candidateHandler.CandidateHandler)
-	router.HandleFunc("/candidate/{id}", candidateHandler.CandidateHandler)
+	router.HandleFunc("/candidates", handler.CandidateListCreateHandler)
+	router.HandleFunc("/candidates/{id}", handler.CandidateRetrieveUpdateDestroyHandler)
 
 	log.Println("starting server on port", config.Port)
 

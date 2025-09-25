@@ -8,10 +8,15 @@ import (
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
+
+	"github.com/george124816/gelection/internal/configs"
 )
 
-func Migrate() {
-	db, err := sql.Open("postgres", "postgres://postgres:postgres@localhost:5555/postgres?sslmode=disable")
+func Migrate() error {
+	databaseConfig := configs.GetPostgresConfig()
+	postgresUrl := databaseConfig.String()
+
+	db, err := sql.Open("postgres", postgresUrl)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -25,5 +30,13 @@ func Migrate() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	m.Up()
+
+	log.Println("running migrate")
+
+	err = m.Up()
+	if err != migrate.ErrNoChange {
+		return err
+	}
+
+	return nil
 }
