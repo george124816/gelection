@@ -1,10 +1,10 @@
-name: Validate Go
+name: Go Format
 
 on:
   pull_request:
 
 jobs:
-  gofmt:
+  go_test:
     runs-on: self-hosted
     steps:
       - name: Checkout code
@@ -15,7 +15,7 @@ jobs:
         with:
           go-version: '1.25.1'
 
-      - name: Run gofmt
+      - name: Run go fmt
         run: |
           FILES=$(gofmt -l .)
           if [ -n "$FILES" ]; then
