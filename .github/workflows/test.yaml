@@ -19,4 +19,4 @@ jobs:
 
       - name: Run go test
         run: |
-          go test
+          make test
