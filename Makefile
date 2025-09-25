@@ -11,3 +11,6 @@ migrate:
 
 reset:
 	migrate -database "$(POSTGRESQL_URL)" -path db/migrations drop -f
+
+test:
+	go test ./...
