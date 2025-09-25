@@ -40,10 +40,6 @@ func TestGetCandidate(t *testing.T) {
 			log.Fatal("the id doesn't match")
 		}
 
-		if 1 != 2 {
-			log.Fatal("should error")
-		}
-
 	})
 	t.Run("should return not found when candidate doesn't exists", func(t *testing.T) {
 		mock, err := pgxmock.NewPool()
