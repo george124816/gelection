@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	candidateHandler "github.com/george124816/gelection/internal/candidate/handler"
+	"github.com/george124816/gelection/internal/candidate/handler"
 	"github.com/george124816/gelection/internal/configs"
 	engine "github.com/george124816/gelection/internal/db"
 	electionHandler "github.com/george124816/gelection/internal/election/handler"

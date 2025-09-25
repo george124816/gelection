@@ -105,7 +105,7 @@ func CandidateListCreateHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusCreated)
 		fmt.Fprintln(w, "created")
 	case r.Method == "GET":
-		candidates, err := repository.GetAll()
+		candidates, err := repository.GetAll(context.Background(), engine.Engine)
 
 		if err != nil {
 			fmt.Fprintln(w, err)
