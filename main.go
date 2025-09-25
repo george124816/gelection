@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
+			log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
 	log.SetOutput(os.Stderr)
 
 	err := migrate.Migrate()
