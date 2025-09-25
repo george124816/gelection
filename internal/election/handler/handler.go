@@ -14,9 +14,9 @@ import (
 	election "github.com/george124816/gelection/internal/election/repository"
 )
 
-func ElectionHandler(w http.ResponseWriter, r *http.Request) {
+func ElectionListCreateHandler(w http.ResponseWriter, r *http.Request) {
 	switch {
-	case r.Method == "GET" && r.Pattern == "/elections":
+	case r.Method == "GET":
 		elections, err := election.GetAll(context.Background(), engine.Engine)
 		if err != nil {
 			fmt.Fprintln(w, err)
@@ -29,24 +29,7 @@ func ElectionHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Fprintln(w, string(resultJson))
-	case r.Method == "GET" && r.Pattern == "/election/{id}":
-		inputId, err := strconv.Atoi(r.PathValue("id"))
-
-		if err != nil {
-			fmt.Fprintln(w, err)
-		}
-
-		election, err := election.GetElection(context.Background(), engine.Engine, inputId)
-
-		if err != nil {
-			fmt.Fprintln(w, err)
-		}
-
-		resultJson, err := json.Marshal(election)
-
-		fmt.Fprintln(w, string(resultJson))
-
-	case r.Method == "POST" && r.Pattern == "/election":
+	case r.Method == "POST":
 		var election model.Election
 		bodyRequest, err := io.ReadAll(r.Body)
 
@@ -69,7 +52,27 @@ func ElectionHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		w.WriteHeader(http.StatusCreated)
 		fmt.Fprintln(w, "created")
-
 	}
 
+}
+
+func ElectionRetrieveHandler(w http.ResponseWriter, r *http.Request) {
+	switch {
+	case r.Method == "GET":
+		inputId, err := strconv.Atoi(r.PathValue("id"))
+
+		if err != nil {
+			fmt.Fprintln(w, err)
+		}
+
+		election, err := election.GetElection(context.Background(), engine.Engine, inputId)
+
+		if err != nil {
+			fmt.Fprintln(w, err)
+		}
+
+		resultJson, err := json.Marshal(election)
+
+		fmt.Fprintln(w, string(resultJson))
+	}
 }
