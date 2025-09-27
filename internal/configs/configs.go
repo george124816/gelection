@@ -53,6 +53,25 @@ func GetPostgresConfig() DatabaseConfig {
 
 }
 
+type OtelConfig struct {
+	Host string
+	Port string
+}
+
+func (o OtelConfig) String() string {
+	return fmt.Sprintf("%s:%s", o.Host, o.Port)
+}
+
+func GetOtelConfig() OtelConfig {
+	host := GetEnvOrDefault("OTEL_HOST", "localhost")
+	port := GetEnvOrDefault("OTEL_PORT", "4318")
+
+	return OtelConfig{
+		Host: host,
+		Port: port,
+	}
+}
+
 func GetEnvOrDefault(envName string, defaultValue string) string {
 	resultValue := os.Getenv(envName)
 	if resultValue != "" {

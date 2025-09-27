@@ -19,7 +19,7 @@ func GetElection(ctx context.Context, db DBQueries, id int) (model.Election, err
 	return election, nil
 }
 
-func GetAll(ctx context.Context, db DBQueries) ([]model.Election, error) {
+func GetAllElections(ctx context.Context, db DBQueries) ([]model.Election, error) {
 	var elections []model.Election
 
 	sqlStatement := `SELECT * FROM elections`

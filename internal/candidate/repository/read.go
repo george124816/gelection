@@ -2,12 +2,37 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/george124816/gelection/internal/candidate/model"
 	"github.com/jackc/pgx/v5"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/metric"
 )
+
+const name = "github.com/george124816/gelection"
+
+var (
+	Meter                = otel.Meter(name)
+	GetAllCandidateCount metric.Int64Counter
+	GetCandidateCount    metric.Int64Counter
+)
+
+func init() {
+	var err error
+	GetAllCandidateCount, err = Meter.Int64Counter("gelection.get_all_candidates",
+		metric.WithDescription("The Number of GetAllCandidates was called"),
+	)
+
+	GetCandidateCount, err = Meter.Int64Counter("gelection.get_candidate",
+		metric.WithDescription("The Number of GetCanddiate was called"),
+	)
+
+	if err != nil {
+		panic(err)
+	}
+}
 
 type DBQueries interface {
 	QueryRow(ctx context.Context, sql string, args ...any) pgx.Row
@@ -24,14 +49,13 @@ func GetCandidate(ctx context.Context, db DBQueries, id uint64) (model.Candidate
 		log.Println(err)
 		return candidate, err
 	}
-
-	fmt.Println(candidate)
+	GetCandidateCount.Add(context.Background(), 1)
 
 	return candidate, nil
 
 }
 
-func GetAll(ctx context.Context, db DBQueries) ([]model.Candidate, error) {
+func GetAllCandidates(ctx context.Context, db DBQueries) ([]model.Candidate, error) {
 
 	var candidates []model.Candidate
 
@@ -50,6 +74,8 @@ func GetAll(ctx context.Context, db DBQueries) ([]model.Candidate, error) {
 		}
 		candidates = append(candidates, c)
 	}
+
+	GetAllCandidateCount.Add(context.Background(), 1)
 
 	return candidates, nil
 }
