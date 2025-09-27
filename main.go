@@ -7,9 +7,9 @@ import (
 	"os"
 	"time"
 
-	// "github.com/george124816/gelection/internal/db"
 	"github.com/george124816/gelection/cmd/http"
 	"github.com/george124816/gelection/cmd/migrate"
+	otel "github.com/george124816/gelection/internal"
 	kafka "github.com/segmentio/kafka-go"
 )
 
@@ -17,7 +17,10 @@ func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
 	log.SetOutput(os.Stderr)
 
-	err := migrate.Migrate()
+	err := otel.StartLogs()
+	err = otel.StartMetrics()
+
+	err = migrate.Migrate()
 	if err != nil {
 		log.Fatalln("Failed to migrate: ", err)
 	}
