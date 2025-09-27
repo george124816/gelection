@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/george124816/gelection/internal/configs"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp"
 	"go.opentelemetry.io/otel/sdk/metric"
@@ -14,7 +15,7 @@ import (
 func StartExporter() error {
 	ctx := context.Background()
 	exp, err := otlpmetrichttp.New(ctx,
-		otlpmetrichttp.WithEndpoint("localhost:4318"),
+		otlpmetrichttp.WithEndpoint(configs.GetOtelConfig().String()),
 		otlpmetrichttp.WithURLPath("/v1/metrics"),
 		otlpmetrichttp.WithInsecure(),
 	)
