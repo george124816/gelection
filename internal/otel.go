@@ -86,7 +86,7 @@ func StartLogs() error {
 	}
 
 	exporter, err := otlploghttp.New(ctx,
-		otlploghttp.WithEndpoint("localhost:4318"),
+		otlploghttp.WithEndpoint(configs.GetOtelConfig().String()),
 		otlploghttp.WithInsecure(),
 		otlploghttp.WithURLPath("/v1/logs"),
 	)
