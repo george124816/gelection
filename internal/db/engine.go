@@ -16,13 +16,13 @@ func Connect() {
 	poolConfig, err := pgxpool.ParseConfig(postgresUrl)
 
 	if err != nil {
-		slog.Error("Unable to parse DATABASE_URL:", err)
+		slog.Error("Unable to parse DATABASE_URL:", "error", err)
 		os.Exit(1)
 	}
 
 	Engine, err = pgxpool.NewWithConfig(context.Background(), poolConfig)
 	if err != nil {
-		slog.Error("Unable to create connection pool", err)
+		slog.Error("Unable to create connection pool", "error", err)
 		os.Exit(1)
 	}
 }

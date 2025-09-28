@@ -17,7 +17,7 @@ func Create(candidate model.Candidate) error {
 	_, err := engine.Engine.Exec(context.Background(), sqlStatement, candidate.Name, candidate.ElectionId)
 
 	if err != nil {
-		slog.Error("failed to create candidate", err)
+		slog.Error("failed to create candidate", "error", err)
 		return err
 	}
 

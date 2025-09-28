@@ -29,7 +29,7 @@ func (c DatabaseConfig) String() string {
 	pgUrl := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s", c.User, c.Password, c.Host, c.Port, c.Database, c.SslMode)
 	u, err := url.Parse(pgUrl)
 	if err != nil {
-		slog.Error("failed to parse url", err)
+		slog.Error("failed to parse url", "error", err)
 		os.Exit(1)
 	}
 	return u.String()

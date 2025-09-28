@@ -19,18 +19,18 @@ func Migrate() error {
 
 	db, err := sql.Open("postgres", postgresUrl)
 	if err != nil {
-		slog.Error("failed to open database connection", err)
+		slog.Error("failed to open database connection", "error", err)
 		os.Exit(1)
 	}
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	if err != nil {
-		slog.Error("failed to configure drive", err)
+		slog.Error("failed to configure drive", "error", err)
 	}
 	m, err := migrate.NewWithDatabaseInstance(
 		"file://db/migrations",
 		"postgres", driver)
 	if err != nil {
-		slog.Error("failed to migrate", err)
+		slog.Error("failed to migrate", "error", err)
 	}
 
 	slog.Info("running migrate")

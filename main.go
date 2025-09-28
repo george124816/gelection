@@ -26,7 +26,7 @@ func main() {
 
 	err = migrate.Migrate()
 	if err != nil {
-		slog.Error("Failed to migrate: ", err)
+		slog.Error("Failed to migrate", "error", err)
 	}
 
 	http.Start()
@@ -38,7 +38,7 @@ func publishMessage() {
 
 	conn, err := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", topic, partition)
 	if err != nil {
-		slog.Error("failed to dial leader: ", err)
+		slog.Error("failed to dial leader: ", "error", err)
 
 	}
 
@@ -50,12 +50,12 @@ func publishMessage() {
 	)
 
 	if err != nil {
-		slog.Error("failed to write messages:", err)
+		slog.Error("failed to write messages:", "error", err)
 
 	}
 
 	if err := conn.Close(); err != nil {
-		slog.Error("failed to close writer: ", err)
+		slog.Error("failed to close writer: ", "error", err)
 
 	}
 
@@ -68,7 +68,7 @@ func consumeMessage() {
 	conn, err := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", topic, partition)
 
 	if err != nil {
-		slog.Error("failed to dial leader: ", err)
+		slog.Error("failed to dial leader: ", "error", err)
 
 	}
 
@@ -86,10 +86,10 @@ func consumeMessage() {
 	}
 
 	if err := batch.Close(); err != nil {
-		slog.Error("failed to close batch:", err)
+		slog.Error("failed to close batch:", "error", err)
 	}
 
 	if err := conn.Close(); err != nil {
-		slog.Error("failed to close connection", err)
+		slog.Error("failed to close connection", "error", err)
 	}
 }

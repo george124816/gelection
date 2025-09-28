@@ -47,7 +47,7 @@ func GetCandidate(ctx context.Context, db DBQueries, id uint64) (model.Candidate
 	err := db.QueryRow(ctx, sqlStatement, id).Scan(&candidate.Id, &candidate.Name, &candidate.ElectionId)
 
 	if err != nil {
-		slog.Error("failed to get candidate", err)
+		slog.Error("failed to get candidate", "error", err)
 		return candidate, err
 	}
 	GetCandidateCount.Add(context.Background(), 1)
@@ -72,7 +72,7 @@ func GetAllCandidates(ctx context.Context, db DBQueries) ([]model.Candidate, err
 	for result.Next() {
 		var c model.Candidate
 		if err := result.Scan(&c.Id, &c.Name, &c.ElectionId); err != nil {
-			slog.Error("failed to scan next candidate", err)
+			slog.Error("failed to scan next candidate", "error", err)
 			os.Exit(1)
 		}
 		candidates = append(candidates, c)

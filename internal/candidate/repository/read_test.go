@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"log/slog"
 	"testing"
 
 	"github.com/george124816/gelection/internal/candidate/model"
@@ -14,7 +15,7 @@ func TestGetCandidate(t *testing.T) {
 		mock, err := pgxmock.NewPool()
 
 		if err != nil {
-			log.Fatal(err)
+			slog.Error(err.Error())
 		}
 
 		defer mock.Close()
@@ -26,17 +27,17 @@ func TestGetCandidate(t *testing.T) {
 		candidate, err := GetCandidate(context.Background(), mock, 3)
 
 		if err != nil {
-			log.Fatal(err)
+			slog.Error(err.Error())
 		}
 
 		if expectedCandidate.Name != candidate.Name {
-			log.Fatal("the name doesn't match")
+			slog.Error(err.Error())
 		}
 		if expectedCandidate.ElectionId != candidate.ElectionId {
-			log.Fatal("the election_id doesn't match")
+			slog.Error(err.Error())
 		}
 		if expectedCandidate.Id != candidate.Id {
-			log.Fatal("the id doesn't match")
+			slog.Error(err.Error())
 		}
 
 	})
@@ -44,7 +45,7 @@ func TestGetCandidate(t *testing.T) {
 		mock, err := pgxmock.NewPool()
 
 		if err != nil {
-			log.Fatal(err)
+			slog.Error(err.Error())
 		}
 
 		defer mock.Close()

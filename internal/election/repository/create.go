@@ -15,7 +15,7 @@ func Create(ctx context.Context, db DBQueries, election model.Election) error {
 	_, err := db.Exec(ctx, sqlStatement, election.Name)
 
 	if err != nil {
-		slog.Error("failed to create election", err)
+		slog.Error("failed to create election", "error", err)
 
 		return err
 	}
