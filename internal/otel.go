@@ -202,7 +202,7 @@ func StartLogs() error {
 }
 
 func InitSlogWithOtel() {
-	otelLogger := global.GetLoggerProvider().Logger("stdlib")
+	otelLogger := global.GetLoggerProvider().Logger("main")
 	otelHandler := NewOtelHandler(otelLogger, slog.LevelInfo)
 
 	stdoutHandler := slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
