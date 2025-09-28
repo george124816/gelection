@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"log"
 	"testing"
 
 	"github.com/george124816/gelection/internal/candidate/model"

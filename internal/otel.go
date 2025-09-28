@@ -2,8 +2,7 @@ package otel
 
 import (
 	"context"
-	"io"
-	defaultLog "log"
+	"log/slog"
 	"os"
 	"time"
 
@@ -18,6 +17,101 @@ import (
 	"go.opentelemetry.io/otel/sdk/resource"
 	semconv "go.opentelemetry.io/otel/semconv/v1.37.0"
 )
+
+type OtelHandler struct {
+	logger otellog.Logger
+	level  slog.Level
+}
+
+type MultiHandler struct {
+	handlers []slog.Handler
+}
+
+func (h *MultiHandler) Enabled(ctx context.Context, lvl slog.Level) bool {
+	for _, hh := range h.handlers {
+		if hh.Enabled(ctx, lvl) {
+			return true
+		}
+	}
+	return false
+}
+
+func (h *MultiHandler) Handle(ctx context.Context, r slog.Record) error {
+	for _, hh := range h.handlers {
+		_ = hh.Handle(ctx, r)
+	}
+	return nil
+}
+
+func (h *MultiHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
+	newHandlers := make([]slog.Handler, len(h.handlers))
+	for i, hh := range h.handlers {
+		newHandlers[i] = hh.WithAttrs(attrs)
+	}
+	return &MultiHandler{handlers: newHandlers}
+}
+
+func (h *MultiHandler) WithGroup(name string) slog.Handler {
+	newHandlers := make([]slog.Handler, len(h.handlers))
+	for i, hh := range h.handlers {
+		newHandlers[i] = hh.WithGroup(name)
+	}
+	return &MultiHandler{handlers: newHandlers}
+}
+
+func NewOtelHandler(logger otellog.Logger, level slog.Level) *OtelHandler {
+	return &OtelHandler{logger: logger, level: level}
+}
+
+func (h *OtelHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
+	return h
+}
+
+func (h *OtelHandler) WithGroup(name string) slog.Handler {
+	return h
+}
+
+func (h *OtelHandler) Enabled(ctx context.Context, lvl slog.Level) bool {
+	return lvl >= h.level
+}
+func (h *OtelHandler) Handle(ctx context.Context, r slog.Record) error {
+	rec := otellog.Record{}
+	rec.SetTimestamp(r.Time)
+	rec.SetSeverityText(r.Level.String())
+	rec.SetSeverity(mapSlogLevelToOTEL(r.Level))
+
+	// build body
+	msg := r.Message
+	rec.SetBody(otellog.StringValue(msg))
+
+	// add attributes as OTEL attributes
+	r.Attrs(func(a slog.Attr) bool {
+		// a.Key and a.Value
+		rec.AddAttributes(otellog.KeyValue{
+			Key:   a.Key,
+			Value: otellog.StringValue(a.Value.String()),
+		})
+		return true
+	})
+
+	h.logger.Emit(ctx, rec)
+	return nil
+}
+
+func mapSlogLevelToOTEL(level slog.Level) otellog.Severity {
+	switch level {
+	case slog.LevelDebug:
+		return otellog.SeverityDebug
+	case slog.LevelInfo:
+		return otellog.SeverityInfo
+	case slog.LevelWarn:
+		return otellog.SeverityWarn
+	case slog.LevelError:
+		return otellog.SeverityError
+	default:
+		return otellog.SeverityInfo
+	}
+}
 
 type otelWriter struct {
 	logger otellog.Logger
@@ -102,14 +196,20 @@ func StartLogs() error {
 
 	global.SetLoggerProvider(provider)
 
-	RedirectStdLogToOtel()
+	InitSlogWithOtel()
 
 	return nil
 }
 
-func RedirectStdLogToOtel() {
+func InitSlogWithOtel() {
 	otelLogger := global.GetLoggerProvider().Logger("stdlib")
-	ow := &otelWriter{logger: otelLogger}
-	mw := io.MultiWriter(os.Stderr, ow)
-	defaultLog.SetOutput(mw)
+	otelHandler := NewOtelHandler(otelLogger, slog.LevelInfo)
+
+	stdoutHandler := slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelDebug,
+	})
+
+	// combine both
+	handler := &MultiHandler{handlers: []slog.Handler{stdoutHandler, otelHandler}}
+	slog.SetDefault(slog.New(handler))
 }

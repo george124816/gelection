@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"log"
+	"log/slog"
 
 	"github.com/george124816/gelection/internal/election/model"
 )
@@ -15,7 +15,7 @@ func Create(ctx context.Context, db DBQueries, election model.Election) error {
 	_, err := db.Exec(ctx, sqlStatement, election.Name)
 
 	if err != nil {
-		log.Println(err)
+		slog.Error("failed to create election", err)
 
 		return err
 	}

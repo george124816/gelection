@@ -2,7 +2,8 @@ package repository
 
 import (
 	"context"
-	"log"
+	"log/slog"
+	"os"
 
 	"github.com/george124816/gelection/internal/candidate/model"
 	"github.com/jackc/pgx/v5"
@@ -46,7 +47,7 @@ func GetCandidate(ctx context.Context, db DBQueries, id uint64) (model.Candidate
 	err := db.QueryRow(ctx, sqlStatement, id).Scan(&candidate.Id, &candidate.Name, &candidate.ElectionId)
 
 	if err != nil {
-		log.Println(err)
+		slog.Error("failed to get candidate", err)
 		return candidate, err
 	}
 	GetCandidateCount.Add(context.Background(), 1)
@@ -56,6 +57,7 @@ func GetCandidate(ctx context.Context, db DBQueries, id uint64) (model.Candidate
 }
 
 func GetAllCandidates(ctx context.Context, db DBQueries) ([]model.Candidate, error) {
+	slog.Debug("GetAllCandidates")
 
 	var candidates []model.Candidate
 
@@ -70,7 +72,8 @@ func GetAllCandidates(ctx context.Context, db DBQueries) ([]model.Candidate, err
 	for result.Next() {
 		var c model.Candidate
 		if err := result.Scan(&c.Id, &c.Name, &c.ElectionId); err != nil {
-			log.Fatal(err)
+			slog.Error("failed to scan next candidate", err)
+			os.Exit(1)
 		}
 		candidates = append(candidates, c)
 	}

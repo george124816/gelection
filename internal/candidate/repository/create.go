@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"log"
+	"log/slog"
 
 	"github.com/george124816/gelection/internal/candidate/model"
 	engine "github.com/george124816/gelection/internal/db"
@@ -17,7 +17,7 @@ func Create(candidate model.Candidate) error {
 	_, err := engine.Engine.Exec(context.Background(), sqlStatement, candidate.Name, candidate.ElectionId)
 
 	if err != nil {
-		log.Println(err)
+		slog.Error("failed to create candidate", err)
 		return err
 	}
 

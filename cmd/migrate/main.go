@@ -2,7 +2,8 @@ package migrate
 
 import (
 	"database/sql"
-	"log"
+	"log/slog"
+	"os"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -18,20 +19,21 @@ func Migrate() error {
 
 	db, err := sql.Open("postgres", postgresUrl)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("failed to open database connection", err)
+		os.Exit(1)
 	}
 	driver, err := postgres.WithInstance(db, &postgres.Config{})
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("failed to configure drive", err)
 	}
 	m, err := migrate.NewWithDatabaseInstance(
 		"file://db/migrations",
 		"postgres", driver)
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("failed to migrate", err)
 	}
 
-	log.Println("running migrate")
+	slog.Info("running migrate")
 
 	err = m.Up()
 	if err != migrate.ErrNoChange {

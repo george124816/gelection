@@ -2,7 +2,7 @@ package engine
 
 import (
 	"context"
-	"log"
+	"log/slog"
 	"os"
 
 	"github.com/george124816/gelection/internal/configs"
@@ -16,12 +16,14 @@ func Connect() {
 	poolConfig, err := pgxpool.ParseConfig(postgresUrl)
 
 	if err != nil {
-		log.Fatalln("Unable to parse DATABASE_URL:", err)
+		slog.Error("Unable to parse DATABASE_URL:", err)
+		os.Exit(1)
 	}
 
 	Engine, err = pgxpool.NewWithConfig(context.Background(), poolConfig)
 	if err != nil {
-		log.Fatalln("Unable to create connection pool", err)
+		slog.Error("Unable to create connection pool", err)
+		os.Exit(1)
 	}
 }
 

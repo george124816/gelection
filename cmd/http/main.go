@@ -1,7 +1,8 @@
 package http
 
 import (
-	"log"
+	"fmt"
+	"log/slog"
 	"net/http"
 
 	"github.com/george124816/gelection/internal/candidate/handler"
@@ -23,7 +24,7 @@ func Start() {
 	router.HandleFunc("/candidates", handler.CandidateListCreateHandler)
 	router.HandleFunc("/candidates/{id}", handler.CandidateRetrieveUpdateDestroyHandler)
 
-	log.Println("starting server on port", config.Port)
+	slog.Info(fmt.Sprintf("starting server on port %d", config.Port))
 
 	http.ListenAndServe(config.GetStringPort(), router)
 
