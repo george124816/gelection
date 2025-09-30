@@ -17,7 +17,7 @@ import (
 func ElectionListCreateHandler(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case r.Method == "GET":
-		elections, err := election.GetAll(context.Background(), engine.Engine)
+		elections, err := election.GetAllElections(context.Background(), engine.Engine)
 		if err != nil {
 			fmt.Fprintln(w, err)
 		}
