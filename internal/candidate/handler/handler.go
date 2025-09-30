@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
+	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -19,14 +19,14 @@ func CandidateRetrieveUpdateDestroyHandler(w http.ResponseWriter, r *http.Reques
 	case r.Method == "GET":
 		inputId, err := strconv.Atoi(r.PathValue("id"))
 		if err != nil {
-			log.Println(err)
+			slog.Error("failed to convert param to id")
 			fmt.Fprintln(w, err)
 		}
 
 		candidate, err := repository.GetCandidate(context.Background(), engine.Engine, uint64(inputId))
 		result, err := json.Marshal(candidate)
 		if err != nil {
-			log.Println(err)
+			slog.Error("failed to marshal to return param", "error", err)
 			fmt.Fprintln(w, err)
 		}
 		fmt.Fprintln(w, string(result))
@@ -35,7 +35,7 @@ func CandidateRetrieveUpdateDestroyHandler(w http.ResponseWriter, r *http.Reques
 		var requestCandidate model.Candidate
 		inputId, err := strconv.Atoi(r.PathValue("id"))
 		if err != nil {
-			log.Println(err)
+			slog.Error("failed to convert the input", "error", err)
 			fmt.Fprintln(w, err)
 			return
 		}
@@ -79,7 +79,7 @@ func CandidateListCreateHandler(w http.ResponseWriter, r *http.Request) {
 		bodyRequest, err := io.ReadAll(r.Body)
 
 		if err != nil {
-			log.Println("body request failed")
+			slog.Error("body reqeust failed", "error", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintln(w, err)
 			return
@@ -88,7 +88,7 @@ func CandidateListCreateHandler(w http.ResponseWriter, r *http.Request) {
 		err = json.Unmarshal(bodyRequest, &requestCandidate)
 
 		if err != nil {
-			log.Println("failed to decode json")
+			slog.Error("failed to decode json", "error", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintln(w, err)
 			return
@@ -97,7 +97,7 @@ func CandidateListCreateHandler(w http.ResponseWriter, r *http.Request) {
 		err = repository.Create(requestCandidate)
 
 		if err != nil {
-			log.Println("failed to create candidate")
+			slog.Error("failed to create candidate", "error", err)
 			w.WriteHeader(http.StatusConflict)
 			fmt.Fprintln(w, err)
 			return

@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"log"
+	"log/slog"
 
 	"github.com/george124816/gelection/internal/election/model"
 )
@@ -33,7 +33,7 @@ func GetAllElections(ctx context.Context, db DBQueries) ([]model.Election, error
 	for result.Next() {
 		var e model.Election
 		if err := result.Scan(&e.Id, &e.Name); err != nil {
-			log.Fatal(err)
+			slog.Error("failed to scan result from database", "error", err)
 		}
 		elections = append(elections, e)
 	}

@@ -3,23 +3,30 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
+	"log/slog"
 	"os"
 	"time"
 
-	// "github.com/george124816/gelection/internal/db"
 	"github.com/george124816/gelection/cmd/http"
 	"github.com/george124816/gelection/cmd/migrate"
+	otel "github.com/george124816/gelection/internal"
 	kafka "github.com/segmentio/kafka-go"
 )
 
 func main() {
-	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
-	log.SetOutput(os.Stderr)
+	handler := slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{
+		AddSource: true,
+	})
 
-	err := migrate.Migrate()
+	logger := slog.New(handler)
+	slog.SetDefault(logger)
+
+	err := otel.StartLogs()
+	err = otel.StartMetrics()
+
+	err = migrate.Migrate()
 	if err != nil {
-		log.Fatalln("Failed to migrate: ", err)
+		slog.Error("Failed to migrate", "error", err)
 	}
 
 	http.Start()
@@ -31,7 +38,7 @@ func publishMessage() {
 
 	conn, err := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", topic, partition)
 	if err != nil {
-		log.Fatal("failed to dial leader: ", err)
+		slog.Error("failed to dial leader: ", "error", err)
 
 	}
 
@@ -43,12 +50,12 @@ func publishMessage() {
 	)
 
 	if err != nil {
-		log.Fatal("failed to write messages:", err)
+		slog.Error("failed to write messages:", "error", err)
 
 	}
 
 	if err := conn.Close(); err != nil {
-		log.Fatal("failed to close writer: ", err)
+		slog.Error("failed to close writer: ", "error", err)
 
 	}
 
@@ -61,7 +68,7 @@ func consumeMessage() {
 	conn, err := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", topic, partition)
 
 	if err != nil {
-		log.Fatal("failed to dial leader: ", err)
+		slog.Error("failed to dial leader: ", "error", err)
 
 	}
 
@@ -79,10 +86,10 @@ func consumeMessage() {
 	}
 
 	if err := batch.Close(); err != nil {
-		log.Fatal("failed to close batch:", err)
+		slog.Error("failed to close batch:", "error", err)
 	}
 
 	if err := conn.Close(); err != nil {
-		log.Fatal("failed to close connection", err)
+		slog.Error("failed to close connection", "error", err)
 	}
 }

@@ -1,10 +1,10 @@
 package http
 
 import (
-	"log"
+	"fmt"
+	"log/slog"
 	"net/http"
 
-	otel "github.com/george124816/gelection/internal"
 	"github.com/george124816/gelection/internal/candidate/handler"
 	"github.com/george124816/gelection/internal/configs"
 	engine "github.com/george124816/gelection/internal/db"
@@ -16,12 +16,6 @@ func Start() {
 
 	engine.Connect()
 
-	err := otel.StartExporter()
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	router := http.NewServeMux()
 
 	router.HandleFunc("/elections", electionHandler.ElectionListCreateHandler)
@@ -30,7 +24,7 @@ func Start() {
 	router.HandleFunc("/candidates", handler.CandidateListCreateHandler)
 	router.HandleFunc("/candidates/{id}", handler.CandidateRetrieveUpdateDestroyHandler)
 
-	log.Println("starting server on port", config.Port)
+	slog.Info(fmt.Sprintf("starting server on port %d", config.Port))
 
 	http.ListenAndServe(config.GetStringPort(), router)
 
