@@ -24,6 +24,8 @@ func Start() {
 	router.HandleFunc("/candidates", handler.CandidateListCreateHandler)
 	router.HandleFunc("/candidates/{id}", handler.CandidateRetrieveUpdateDestroyHandler)
 
+	router.HandleFunc("/health", handler.HealthCheckHandler)
+
 	slog.Info(fmt.Sprintf("starting server on port %d", config.Port))
 
 	http.ListenAndServe(config.GetStringPort(), router)
