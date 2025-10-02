@@ -7,6 +7,7 @@ import (
 
 	"github.com/george124816/gelection/internal/candidate/model"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/metric"
@@ -38,6 +39,7 @@ func init() {
 type DBQueries interface {
 	QueryRow(ctx context.Context, sql string, args ...any) pgx.Row
 	Query(ctx context.Context, sql string, args ...any) (pgx.Rows, error)
+	Exec(ctx context.Context, sql string, args ...any) (pgconn.CommandTag, error)
 }
 
 func GetCandidate(ctx context.Context, db DBQueries, id uint64) (model.Candidate, error) {
