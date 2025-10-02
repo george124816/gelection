@@ -47,4 +47,4 @@ jobs:
 
       - name: Run the server
         run: |
-            docker stack deploy -c docker-compose-prod.yml --resolve-image always -d gelection 
+            docker stack deploy -c docker-compose-prod.yaml --resolve-image always -d gelection 
