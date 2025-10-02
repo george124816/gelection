@@ -7,6 +7,7 @@ on:
 
 jobs:
   go_fmt:
+    runs-on: ubuntu
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
