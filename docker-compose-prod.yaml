@@ -8,14 +8,14 @@ services:
         mode: ingress
     environment:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - DATABASE_USER=${secrets.DATABASE_USER}
-      - DATABASE_PASSWORD=${secrets.DATABASE_PASSWORD}
-      - DATABASE_HOST=${secrets.DATABASE_HOST}
-      - DATABASE_PORT=${secrets.DATABASE_PORT}
-      - DATABASE_NAME=${secrets.DATABASE_NAME}
-      - DATABASE_SSL_MODE=${secrets.DATABASE_SSL_MODE}
-      - OTEL_HOST=${secrets.OTEL_HOST}
-      - OTEL_PORT=${secrets.OTEL_PORT}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_SSL_MODE=${DATABASE_SSL_MODE}
+      - OTEL_HOST=${OTEL_HOST}
+      - OTEL_PORT=${OTEL_PORT}
     deploy:
       replicas: 3
       update_config:
