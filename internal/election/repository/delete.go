@@ -2,7 +2,8 @@ package repository
 
 import (
 	"context"
-	"github.com/george124816/gelection/internal/db"
+
+	engine "github.com/george124816/gelection/internal/db"
 )
 
 func Delete(id int) error {

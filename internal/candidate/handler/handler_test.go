@@ -17,13 +17,13 @@ func TestCandidateHandler_Limitations(t *testing.T) {
 		// The handlers cannot be properly unit tested without significant refactoring
 		// because they depend on the global database engine which is not initialized
 		// during tests, and error handling doesn't prevent continued execution.
-		
+
 		// This test serves as documentation of the testing limitations
 		// and would typically be addressed by:
 		// 1. Dependency injection for database connections
 		// 2. Proper error handling with early returns
 		// 3. Interface-based design for easier mocking
-		
+
 		t.Skip("Handler testing requires database connection - skipping to avoid nil pointer dereference")
 	})
 }
@@ -33,7 +33,7 @@ func TestCandidateHandler_MethodRouting(t *testing.T) {
 		// Test that unsupported methods are handled by the default case
 		// Note: These tests would also fail due to database dependency,
 		// but they demonstrate the testing approach for method-based routing
-		
+
 		testCases := []struct {
 			method string
 			path   string
@@ -42,7 +42,7 @@ func TestCandidateHandler_MethodRouting(t *testing.T) {
 			{"OPTIONS", "/candidates/1"},
 			{"HEAD", "/candidates/1"},
 		}
-		
+
 		for _, tc := range testCases {
 			t.Run(tc.method, func(t *testing.T) {
 				t.Skip("Handler testing requires database connection - skipping to avoid nil pointer dereference")
