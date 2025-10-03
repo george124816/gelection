@@ -8,6 +8,7 @@ import (
 
 	"github.com/george124816/gelection/internal/configs"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp"
 	otellog "go.opentelemetry.io/otel/log"
@@ -173,6 +174,7 @@ func StartLogs() error {
 			semconv.SchemaURL,
 			semconv.ServiceName("gelection"),
 			semconv.ServiceVersion("0.0.1"),
+			attribute.String("hostname", getHostname()),
 		),
 	)
 	if err != nil {
@@ -209,11 +211,15 @@ func InitSlogWithOtel() {
 		Level: slog.LevelDebug,
 	})
 
+	handler := &MultiHandler{handlers: []slog.Handler{stdoutHandler, otelHandler}}
+	slog.SetDefault(slog.New(handler))
+}
+
+func getHostname() string {
 	hostname, err := os.Hostname()
 	if err != nil {
 		hostname = "unknown"
 	}
 
-	handler := &MultiHandler{handlers: []slog.Handler{stdoutHandler, otelHandler}}
-	slog.SetDefault(slog.New(handler).With(slog.String("hostname", hostname)))
+	return hostname
 }
