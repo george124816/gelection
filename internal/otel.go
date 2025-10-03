@@ -209,7 +209,11 @@ func InitSlogWithOtel() {
 		Level: slog.LevelDebug,
 	})
 
-	// combine both
+	hostname, err := os.Hostname()
+	if err != nil {
+		hostname = "unknown"
+	}
+
 	handler := &MultiHandler{handlers: []slog.Handler{stdoutHandler, otelHandler}}
-	slog.SetDefault(slog.New(handler))
+	slog.SetDefault(slog.New(handler).With(slog.String("hostname", hostname)))
 }
