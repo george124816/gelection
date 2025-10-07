@@ -131,7 +131,7 @@ func (ow *otelWriter) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
-func StartMetrics() error {
+func StartMetrics() (*metric.MeterProvider, error) {
 	ctx := context.Background()
 	exp, err := otlpmetrichttp.New(ctx,
 		otlpmetrichttp.WithEndpoint(configs.GetOtelConfig().String()),
@@ -140,7 +140,7 @@ func StartMetrics() error {
 	)
 
 	if err != nil {
-		return err
+		return &metric.MeterProvider{}, err
 	}
 
 	res, err := resource.Merge(resource.Default(),
@@ -150,7 +150,7 @@ func StartMetrics() error {
 		))
 
 	if err != nil {
-		return err
+		return &metric.MeterProvider{}, err
 	}
 
 	meterProvider := metric.NewMeterProvider(
@@ -162,10 +162,10 @@ func StartMetrics() error {
 
 	otel.SetMeterProvider(meterProvider)
 
-	return nil
+	return meterProvider, nil
 }
 
-func StartLogs() error {
+func StartLogs() (*log.LoggerProvider, error) {
 	ctx := context.Background()
 
 	res, err := resource.Merge(
@@ -178,7 +178,7 @@ func StartLogs() error {
 		),
 	)
 	if err != nil {
-		return err
+		return &log.LoggerProvider{}, err
 	}
 
 	exporter, err := otlploghttp.New(ctx,
@@ -187,7 +187,7 @@ func StartLogs() error {
 		otlploghttp.WithURLPath("/v1/logs"),
 	)
 	if err != nil {
-		return err
+		return &log.LoggerProvider{}, err
 	}
 
 	processor := log.NewBatchProcessor(exporter)
@@ -200,7 +200,7 @@ func StartLogs() error {
 
 	InitSlogWithOtel()
 
-	return nil
+	return provider, nil
 }
 
 func InitSlogWithOtel() {
