@@ -37,7 +37,7 @@ func Start() (*http.Server, error) {
 	go func() {
 		err := server.ListenAndServe()
 
-		if err != nil {
+		if err != nil && err != http.ErrServerClosed {
 			slog.Error(err.Error())
 		}
 	}()
