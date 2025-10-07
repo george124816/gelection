@@ -10,6 +10,7 @@ import (
 	engine "github.com/george124816/gelection/internal/db"
 	electionHandler "github.com/george124816/gelection/internal/election/handler"
 	healthHandler "github.com/george124816/gelection/internal/health/handler"
+	voteHandler "github.com/george124816/gelection/internal/vote/handler"
 )
 
 func Start() (*http.Server, error) {
@@ -26,6 +27,8 @@ func Start() (*http.Server, error) {
 	router.HandleFunc("/candidates/{id}", handler.CandidateRetrieveUpdateDestroyHandler)
 
 	router.HandleFunc("/health", healthHandler.HealthCheckHandler)
+
+	router.HandleFunc("/votes", voteHandler.VoteListCreateHandler)
 
 	slog.Info(fmt.Sprintf("starting server on port %d", config.Port))
 
