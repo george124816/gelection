@@ -12,7 +12,7 @@ import (
 	healthHandler "github.com/george124816/gelection/internal/health/handler"
 )
 
-func Start() {
+func Start() (*http.Server, error) {
 	config := configs.HttpConfig{Port: 4000}
 
 	engine.Connect()
@@ -29,6 +29,19 @@ func Start() {
 
 	slog.Info(fmt.Sprintf("starting server on port %d", config.Port))
 
-	http.ListenAndServe(config.GetStringPort(), router)
+	server := &http.Server{
+		Addr:    config.GetStringPort(),
+		Handler: router,
+	}
+
+	go func() {
+		err := server.ListenAndServe()
+
+		if err != nil {
+			slog.Error(err.Error())
+		}
+	}()
+
+	return server, nil
 
 }

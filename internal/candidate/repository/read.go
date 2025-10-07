@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 	"os"
+	"time"
 
 	"github.com/george124816/gelection/internal/candidate/model"
 	"github.com/jackc/pgx/v5"

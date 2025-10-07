@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/george124816/gelection/cmd/http"
@@ -14,6 +16,10 @@ import (
 )
 
 func main() {
+	sign := make(chan os.Signal, 1)
+
+	signal.Notify(sign, syscall.SIGINT, syscall.SIGTERM)
+
 	handler := slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{
 		AddSource: true,
 	})
@@ -21,15 +27,36 @@ func main() {
 	logger := slog.New(handler)
 	slog.SetDefault(logger)
 
-	err := otel.StartLogs()
-	err = otel.StartMetrics()
+	loggerProvider, err := otel.StartLogs()
+	if err != nil {
+		slog.Error(err.Error())
+	}
+	metricProvider, err := otel.StartMetrics()
+	if err != nil {
+		slog.Error(err.Error())
+	}
 
 	err = migrate.Migrate()
 	if err != nil {
-		slog.Error("Failed to migrate", "error", err)
+		slog.Error(err.Error())
 	}
 
-	http.Start()
+	server, err := http.Start()
+	if err != nil {
+		slog.Error(err.Error())
+	}
+
+	ctx, cancelContext := context.WithTimeout(context.Background(), 30*time.Second)
+
+	defer cancelContext()
+
+	receivedSignal := <-sign
+	slog.Warn(receivedSignal.String())
+
+	server.Shutdown(ctx)
+	loggerProvider.Shutdown(ctx)
+	metricProvider.Shutdown(ctx)
+
 }
 
 func publishMessage() {
