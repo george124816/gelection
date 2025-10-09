@@ -29,6 +29,7 @@ func CandidateRetrieveUpdateDestroyHandler(w http.ResponseWriter, r *http.Reques
 			slog.Error("failed to marshal to return param", "error", err)
 			fmt.Fprintln(w, err)
 		}
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(result))
 
 	case r.Method == "UPDATE":
@@ -116,6 +117,7 @@ func CandidateListCreateHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintln(w, err)
 		}
 
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(resultJson))
 	default:
 		fmt.Println("not found")

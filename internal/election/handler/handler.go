@@ -28,6 +28,7 @@ func ElectionListCreateHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintln(w, err)
 		}
 
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(resultJson))
 	case r.Method == "POST":
 		var election model.Election
@@ -73,6 +74,7 @@ func ElectionRetrieveHandler(w http.ResponseWriter, r *http.Request) {
 
 		resultJson, err := json.Marshal(election)
 
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(resultJson))
 	}
 }
