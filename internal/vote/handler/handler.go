@@ -27,6 +27,7 @@ func VoteListCreateHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintln(w, err)
 		}
 
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(resultJson))
 	case r.Method == "POST":
 		var vote model.Vote
