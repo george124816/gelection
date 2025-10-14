@@ -14,16 +14,28 @@ import (
 	engine "github.com/george124816/gelection/internal/db"
 )
 
+var adapter repository.Adapter = repository.DefaultAdapter{}
+
 func CandidateRetrieveUpdateDestroyHandler(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case r.Method == "GET":
 		inputId, err := strconv.Atoi(r.PathValue("id"))
 		if err != nil {
-			slog.Error("failed to convert param to id")
-			fmt.Fprintln(w, err)
+			error_to_return := "failed to cast input"
+			slog.Error(error_to_return)
+			fmt.Fprintln(w, error_to_return)
+			return
 		}
 
-		candidate, err := repository.GetCandidate(context.Background(), engine.Engine, uint64(inputId))
+		candidate, err := adapter.GetCandidate(context.Background(), engine.Engine, uint64(inputId))
+
+		if err != nil {
+			error_to_return := "failed to query database result"
+			slog.Error(error_to_return)
+			fmt.Fprintln(w, error_to_return)
+			return
+		}
+
 		result, err := json.Marshal(candidate)
 		if err != nil {
 			slog.Error("failed to marshal to return param", "error", err)
@@ -106,7 +118,8 @@ func CandidateListCreateHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusCreated)
 		fmt.Fprintln(w, "created")
 	case r.Method == "GET":
-		candidates, err := repository.GetAllCandidates(context.Background(), engine.Engine)
+
+		candidates, err := adapter.GetAllCandidates(context.Background(), engine.Engine)
 
 		if err != nil {
 			fmt.Fprintln(w, err)
