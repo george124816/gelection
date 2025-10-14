@@ -9,6 +9,8 @@ import (
 	"github.com/pashagolub/pgxmock/v4"
 )
 
+var adapter = DefaultAdapter{}
+
 func TestGetCandidate(t *testing.T) {
 	t.Run("should return candidate successfully", func(t *testing.T) {
 		expectedCandidate := model.Candidate{Name: "Ernesto", Id: 3, ElectionId: 22}
@@ -24,7 +26,7 @@ func TestGetCandidate(t *testing.T) {
 
 		mock.ExpectQuery("SELECT \\* FROM candidates WHERE id = \\$1").WithArgs(uint64(3)).WillReturnRows(rows)
 
-		candidate, err := GetCandidate(context.Background(), mock, 3)
+		candidate, err := adapter.GetCandidate(context.Background(), mock, 3)
 
 		if err != nil {
 			slog.Error(err.Error())
@@ -54,7 +56,7 @@ func TestGetCandidate(t *testing.T) {
 
 		mock.ExpectQuery("SELECT \\* FROM candidates WHERE id = \\$1").WithArgs(uint64(3)).WillReturnRows(rows)
 
-		_, err = GetCandidate(context.Background(), mock, 3)
+		_, err = adapter.GetCandidate(context.Background(), mock, 3)
 
 		if err.Error() != "no rows in result set" {
 			t.Error(err)
