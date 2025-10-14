@@ -22,4 +22,4 @@ services:
         parallelism: 1
         delay: 5s
       restart_policy:
-        condition: on-failure
+        condition: any
