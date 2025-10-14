@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/george124816/gelection/internal/candidate/model"
-	"github.com/jackc/pgx/v5"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/metric"
@@ -35,12 +34,15 @@ func init() {
 	}
 }
 
-type DBQueries interface {
-	QueryRow(ctx context.Context, sql string, args ...any) pgx.Row
-	Query(ctx context.Context, sql string, args ...any) (pgx.Rows, error)
+type Adapter interface {
+	GetCandidate(context.Context, DBQueries, uint64) (model.Candidate, error)
+	GetAllCandidates(ctx context.Context, db DBQueries) ([]model.Candidate, error)
 }
 
-func GetCandidate(ctx context.Context, db DBQueries, id uint64) (model.Candidate, error) {
+type DefaultAdapter struct {
+}
+
+func (d DefaultAdapter) GetCandidate(ctx context.Context, db DBQueries, id uint64) (model.Candidate, error) {
 	var candidate model.Candidate
 	sqlStatement := `SELECT * FROM candidates WHERE id = $1`
 
@@ -56,7 +58,7 @@ func GetCandidate(ctx context.Context, db DBQueries, id uint64) (model.Candidate
 
 }
 
-func GetAllCandidates(ctx context.Context, db DBQueries) ([]model.Candidate, error) {
+func (d DefaultAdapter) GetAllCandidates(ctx context.Context, db DBQueries) ([]model.Candidate, error) {
 	slog.Debug("GetAllCandidates")
 
 	var candidates []model.Candidate
