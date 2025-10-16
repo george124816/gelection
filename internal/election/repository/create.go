@@ -7,7 +7,7 @@ import (
 	"github.com/george124816/gelection/internal/election/model"
 )
 
-func Create(ctx context.Context, db DBQueries, election model.Election) error {
+func (d DefaultAdapter) Create(ctx context.Context, db DBQueries, election model.Election) error {
 	sqlStatement := `
 	INSERT INTO elections (name) VALUES ($1)
 	`

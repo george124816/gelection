@@ -7,7 +7,7 @@ import (
 	"github.com/george124816/gelection/internal/election/model"
 )
 
-func GetElection(ctx context.Context, db DBQueries, id int) (model.Election, error) {
+func (d DefaultAdapter) GetElection(ctx context.Context, db DBQueries, id int) (model.Election, error) {
 	var election model.Election
 	sqlStatement := `SELECT * FROM elections WHERE id = $1`
 
@@ -19,7 +19,7 @@ func GetElection(ctx context.Context, db DBQueries, id int) (model.Election, err
 	return election, nil
 }
 
-func GetAllElections(ctx context.Context, db DBQueries) ([]model.Election, error) {
+func (d DefaultAdapter) GetAllElections(ctx context.Context, db DBQueries) ([]model.Election, error) {
 	var elections []model.Election
 
 	sqlStatement := `SELECT * FROM elections`
