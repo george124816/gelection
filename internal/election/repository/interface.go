@@ -17,7 +17,7 @@ type DBQueries interface {
 type Adapter interface {
 	GetAllElections(ctx context.Context, db DBQueries) ([]model.Election, error)
 	Create(ctx context.Context, db DBQueries, election model.Election) error
-	GetElection(ctx context.Context, db DBQueries, id int) (model.Election, error)
+	GetElection(ctx context.Context, db DBQueries, id int) (*model.Election, error)
 }
 
 type DefaultAdapter struct{}

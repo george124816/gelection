@@ -22,6 +22,7 @@ func ElectionListCreateHandler(w http.ResponseWriter, r *http.Request) {
 		elections, err := adapter.GetAllElections(context.Background(), engine.Engine)
 		if err != nil {
 			fmt.Fprintln(w, err)
+			return
 		}
 
 		resultJson, err := json.Marshal(elections)
@@ -66,16 +67,20 @@ func ElectionRetrieveHandler(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			fmt.Fprintln(w, err)
+			return
 		}
 
 		election, err := adapter.GetElection(context.Background(), engine.Engine, inputId)
 
 		if err != nil {
-			fmt.Fprintln(w, err)
+			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprintln(w, "election_not_found")
+			return
 		}
 
 		resultJson, err := json.Marshal(election)
 
+		fmt.Println(string(resultJson))
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(resultJson))
 	}
