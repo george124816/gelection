@@ -14,12 +14,15 @@ import (
 	election "github.com/george124816/gelection/internal/election/repository"
 )
 
+var adapter repository.Adapter = election.DefaultAdapter{}
+
 func ElectionListCreateHandler(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case r.Method == "GET":
-		elections, err := election.GetAllElections(context.Background(), engine.Engine)
+		elections, err := adapter.GetAllElections(context.Background(), engine.Engine)
 		if err != nil {
 			fmt.Fprintln(w, err)
+			return
 		}
 
 		resultJson, err := json.Marshal(elections)
@@ -44,7 +47,7 @@ func ElectionListCreateHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintln(w, err)
 		}
 
-		err = repository.Create(context.Background(), engine.Engine, election)
+		err = adapter.Create(context.Background(), engine.Engine, election)
 
 		if err != nil {
 			w.WriteHeader(http.StatusConflict)
@@ -64,16 +67,20 @@ func ElectionRetrieveHandler(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			fmt.Fprintln(w, err)
+			return
 		}
 
-		election, err := election.GetElection(context.Background(), engine.Engine, inputId)
+		election, err := adapter.GetElection(context.Background(), engine.Engine, inputId)
 
 		if err != nil {
-			fmt.Fprintln(w, err)
+			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprintln(w, "election_not_found")
+			return
 		}
 
 		resultJson, err := json.Marshal(election)
 
+		fmt.Println(string(resultJson))
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(resultJson))
 	}
